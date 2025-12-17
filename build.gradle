@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "jacoco"
 }
 
 repositories {
@@ -12,28 +13,19 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.24.2"
 }
 
-group = 'org.douggschwind'
-version = '1.0-SNAPSHOT'
-description = 'Games'
-java.sourceCompatibility = JavaVersion.VERSION_17
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
 
 tasks.withType(Test) {
     systemProperty "file.encoding", "UTF-8"
 }
 
-allprojects {
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked"
-        }
-    }
+jacocoTestReport {
+    dependsOn test
 }
-
